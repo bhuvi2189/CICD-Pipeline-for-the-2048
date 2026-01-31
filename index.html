@@ -1,99 +1,244 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>2048</title>
+  <meta charset="UTF-8">
+  <title>2048 by BHUVANESH</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link href="style/main.css" rel="stylesheet" type="text/css">
-  <link rel="shortcut icon" href="favicon.ico">
-  <link rel="apple-touch-icon" href="meta/apple-touch-icon.png">
-  <link rel="apple-touch-startup-image" href="meta/apple-touch-startup-image-640x1096.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"> <!-- iPhone 5+ -->
-  <link rel="apple-touch-startup-image" href="meta/apple-touch-startup-image-640x920.png"  media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)"> <!-- iPhone, retina -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
 
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+    body {
+      background: linear-gradient(135deg, #1d2671, #c33764);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      margin: 0;
+    }
+
+    .container {
+      background: #121212;
+      padding: 25px;
+      border-radius: 16px;
+      width: 360px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .score-box {
+      background: #2a2a2a;
+      padding: 10px 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .score-box span {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .score-box strong {
+      font-size: 20px;
+    }
+
+    .new-game {
+      background: #ff9800;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .new-game:hover {
+      background: #ffa726;
+    }
+
+    .grid {
+      background: #1e1e1e;
+      padding: 10px;
+      border-radius: 14px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .cell {
+      background: #2b2b2b;
+      height: 70px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 26px;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .cell[data-value="2"] { background: #eee4da; color: #333; }
+    .cell[data-value="4"] { background: #ede0c8; color: #333; }
+    .cell[data-value="8"] { background: #f2b179; }
+    .cell[data-value="16"] { background: #f59563; }
+    .cell[data-value="32"] { background: #f67c5f; }
+    .cell[data-value="64"] { background: #f65e3b; }
+    .cell[data-value="128"] { background: #edcf72; color: #333; }
+    .cell[data-value="256"] { background: #edcc61; color: #333; }
+    .cell[data-value="512"] { background: #edc850; }
+    .cell[data-value="1024"] { background: #edc53f; }
+    .cell[data-value="2048"] {
+      background: linear-gradient(135deg, gold, orange);
+      color: #000;
+    }
+
+    .info {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #bbb;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="heading">
-      <h1 class="title">2048 by BHUVANESH</h1>
-      <div class="scores-container">
-        <div class="score-container">0</div>
-        <div class="best-container">0</div>
-      </div>
+
+<div class="container">
+  <h1>2048 by BHUVANESH</h1>
+
+  <div class="top">
+    <div class="score-box">
+      <span>SCORE</span>
+      <strong id="score">0</strong>
     </div>
-
-    <div class="above-game">
-      <p class="game-intro">Join the numbers and get to the <strong>2048 tile!</strong></p>
-      <a class="restart-button">New Game</a>
-    </div>
-
-    <div class="game-container">
-      <div class="game-message">
-        <p></p>
-        <div class="lower">
-	        <a class="keep-playing-button">Keep going</a>
-          <a class="retry-button">Try again</a>
-        </div>
-      </div>
-
-      <div class="grid-container">
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-      </div>
-
-      <div class="tile-container">
-
-      </div>
-    </div>
-
-    <p class="game-explanation">
-      <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles. When two tiles with the same number touch, they <strong>merge into one!</strong>
-    </p>
-    <hr>
-    <p>
-    <strong class="important">Note:</strong> This site is the official version of 2048. You can play it on your phone via <a href="http://git.io/2048">http://git.io/2048.</a> All other apps or sites are derivatives or fakes, and should be used with caution.
-    </p>
-    <hr>
-    <p>
-    Created by <a href="http://gabrielecirulli.com" target="_blank">Admant-bhuvi.</a> Based on <a href="https://itunes.apple.com/us/app/1024!/id823499224" target="_blank">1024 by Veewo Studio</a> and conceptually similar to <a href="http://asherv.com/threes/" target="_blank">Threes by Bhuvanesh.</a>
-    </p>
+    <button class="new-game" onclick="startGame()">New Game</button>
   </div>
 
-  <script src="js/bind_polyfill.js"></script>
-  <script src="js/classlist_polyfill.js"></script>
-  <script src="js/animframe_polyfill.js"></script>
-  <script src="js/keyboard_input_manager.js"></script>
-  <script src="js/html_actuator.js"></script>
-  <script src="js/grid.js"></script>
-  <script src="js/tile.js"></script>
-  <script src="js/local_storage_manager.js"></script>
-  <script src="js/game_manager.js"></script>
-  <script src="js/application.js"></script>
+  <div class="grid" id="grid"></div>
+
+  <div class="info">
+    Use ⬅️ ⬆️ ➡️ ⬇️ arrow keys to play
+  </div>
+</div>
+
+<script>
+  const gridElement = document.getElementById("grid");
+  const scoreElement = document.getElementById("score");
+
+  let grid = [];
+  let score = 0;
+
+  function startGame() {
+    grid = Array(16).fill(0);
+    score = 0;
+    addRandomTile();
+    addRandomTile();
+    updateGrid();
+  }
+
+  function addRandomTile() {
+    let empty = grid
+      .map((v, i) => v === 0 ? i : null)
+      .filter(v => v !== null);
+
+    if (empty.length === 0) return;
+
+    let index = empty[Math.floor(Math.random() * empty.length)];
+    grid[index] = Math.random() < 0.9 ? 2 : 4;
+  }
+
+  function updateGrid() {
+    gridElement.innerHTML = "";
+    grid.forEach(value => {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      if (value !== 0) {
+        cell.textContent = value;
+        cell.dataset.value = value;
+      }
+      gridElement.appendChild(cell);
+    });
+    scoreElement.textContent = score;
+  }
+
+  function slide(row) {
+    row = row.filter(v => v);
+    for (let i = 0; i < row.length - 1; i++) {
+      if (row[i] === row[i + 1]) {
+        row[i] *= 2;
+        score += row[i];
+        row[i + 1] = 0;
+      }
+    }
+    row = row.filter(v => v);
+    while (row.length < 4) row.push(0);
+    return row;
+  }
+
+  function moveLeft() {
+    for (let r = 0; r < 4; r++) {
+      let row = grid.slice(r * 4, r * 4 + 4);
+      row = slide(row);
+      grid.splice(r * 4, 4, ...row);
+    }
+  }
+
+  function moveRight() {
+    for (let r = 0; r < 4; r++) {
+      let row = grid.slice(r * 4, r * 4 + 4).reverse();
+      row = slide(row).reverse();
+      grid.splice(r * 4, 4, ...row);
+    }
+  }
+
+  function moveUp() {
+    for (let c = 0; c < 4; c++) {
+      let col = [grid[c], grid[c + 4], grid[c + 8], grid[c + 12]];
+      col = slide(col);
+      for (let r = 0; r < 4; r++) grid[c + r * 4] = col[r];
+    }
+  }
+
+  function moveDown() {
+    for (let c = 0; c < 4; c++) {
+      let col = [grid[c], grid[c + 4], grid[c + 8], grid[c + 12]].reverse();
+      col = slide(col).reverse();
+      for (let r = 0; r < 4; r++) grid[c + r * 4] = col[r];
+    }
+  }
+
+  document.addEventListener("keydown", e => {
+    let oldGrid = [...grid];
+
+    if (e.key === "ArrowLeft") moveLeft();
+    if (e.key === "ArrowRight") moveRight();
+    if (e.key === "ArrowUp") moveUp();
+    if (e.key === "ArrowDown") moveDown();
+
+    if (oldGrid.toString() !== grid.toString()) {
+      addRandomTile();
+      updateGrid();
+    }
+  });
+
+  startGame();
+</script>
+
 </body>
 </html>
